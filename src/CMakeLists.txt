@@ -40,6 +40,6 @@ add_subdirectory (cli)
 
 ecm_qt_install_logging_categories(
     EXPORT PLASMA_ACTIVITIES
-    FILE kde.plasma.categories
+    FILE plasma-activities.categories
     DESTINATION ${KDE_INSTALL_LOGGINGCATEGORIESDIR}
 )
