@@ -24,10 +24,11 @@
 #include <KDirWatch>
 
 // Boost
-#include <boost/optional.hpp>
 #include <boost/range/adaptor/filtered.hpp>
 #include <boost/range/algorithm/binary_search.hpp>
 #include <boost/range/algorithm/find_if.hpp>
+
+#include <optional>
 
 // Local
 #include "utils/remove_if.h"
@@ -66,8 +67,8 @@ public:
      * Returns an option(index, iterator) for the found activity.
      */
     template<typename _Container>
-    static inline boost::optional<std::pair<unsigned int, typename _Container::const_iterator>> activityPosition(const _Container &container,
-                                                                                                                 const QString &activityId)
+    static inline std::optional<std::pair<unsigned int, typename _Container::const_iterator>> activityPosition(const _Container &container,
+                                                                                                               const QString &activityId)
     {
         using ActivityPosition = decltype(activityPosition(container, activityId));
         using ContainerElement = typename _Container::value_type;
