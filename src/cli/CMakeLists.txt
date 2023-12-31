@@ -2,7 +2,6 @@
 project (PlasmaActivitiesCLI)
 
 find_package (Qt6 REQUIRED NO_MODULE COMPONENTS Core Gui Widgets)
-find_package (Qt6 REQUIRED NO_MODULE COMPONENTS Core Gui Widgets)
 
 add_executable(plasma-activities-cli6)
 ecm_mark_nongui_executable(plasma-activities-cli6)
