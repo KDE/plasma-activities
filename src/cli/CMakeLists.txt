@@ -2,8 +2,6 @@
 project (KActivitiesCLI)
 
 find_package (Qt${QT_MAJOR_VERSION} REQUIRED NO_MODULE COMPONENTS Core Gui Widgets)
-find_package (Qt${QT_MAJOR_VERSION} REQUIRED NO_MODULE COMPONENTS Core Gui Widgets)
-find_package (KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS WindowSystem)
 
 include_directories (
    ${KACTIVITIES_CURRENT_ROOT_SOURCE_DIR}/src/
