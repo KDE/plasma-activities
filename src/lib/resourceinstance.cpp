@@ -18,6 +18,16 @@ void notifyAccessed(const QUrl &uri, const QString &application)
         return;
     }
 
+    if (uri.fileName().startsWith('.')) {
+        // skip hidden files
+        return;
+    }
+
+    if (uri.path().contains(QStringLiteral("/."))) {
+        // skip files in hidden directories
+        return;
+    }
+
     Manager::resources()->RegisterResourceEvent(application.isEmpty() ? QCoreApplication::instance()->applicationName() : application,
                                                 0,
                                                 uri.toString(),
