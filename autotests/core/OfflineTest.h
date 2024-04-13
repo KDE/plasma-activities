@@ -17,7 +17,7 @@ class OfflineTest : public Test
 {
     Q_OBJECT
 public:
-    OfflineTest(QObject *parent = nullptr);
+    explicit OfflineTest(QObject *parent = nullptr);
 
 private Q_SLOTS:
     void initTestCase();

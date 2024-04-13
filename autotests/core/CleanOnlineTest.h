@@ -34,7 +34,7 @@ class CleanOnlineSetup : public Test
 {
     Q_OBJECT
 public:
-    CleanOnlineSetup(QObject *parent = nullptr);
+    explicit CleanOnlineSetup(QObject *parent = nullptr);
 
 private Q_SLOTS:
     void testCleanOnlineActivityControl();
@@ -53,7 +53,7 @@ class OnlineTest : public Test
 {
     Q_OBJECT
 public:
-    OnlineTest(QObject *parent = nullptr);
+    explicit OnlineTest(QObject *parent = nullptr);
 
 private Q_SLOTS:
     void testOnlineActivityListing();
