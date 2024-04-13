@@ -19,6 +19,9 @@ target_sources(PlasmaActivitiesTest PRIVATE
    Process.cpp
    OfflineTest.cpp
    CleanOnlineTest.cpp
+   Process.h
+   OfflineTest.h
+   CleanOnlineTest.h
    ${PLASMA_ACTIVITIES_CURRENT_ROOT_SOURCE_DIR}/autotests/common/test.cpp
 )
 
