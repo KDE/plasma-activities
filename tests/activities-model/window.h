@@ -28,8 +28,8 @@ protected:
     void showEvent(QShowEvent *event) override;
 
 private:
-    Ui::MainWindow *ui;
-    KActivities::Consumer *activities;
-    KActivities::ActivitiesModel *modelRunningActivities;
-    KActivities::ActivitiesModel *modelStoppedActivities;
+    Ui::MainWindow *const ui;
+    KActivities::Consumer *const activities;
+    KActivities::ActivitiesModel *const modelRunningActivities;
+    KActivities::ActivitiesModel *const modelStoppedActivities;
 };
