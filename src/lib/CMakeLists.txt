@@ -17,18 +17,27 @@ target_sources(PlasmaActivities PRIVATE
    ${PLASMA_ACTIVITIES_CURRENT_ROOT_SOURCE_DIR}/src/common/dbus/org.kde.ActivityManager.Activities.cpp
 
    consumer.cpp
+   consumer.h
    controller.cpp
+   controller.h
    info.cpp
+   info.h
    resourceinstance.cpp
+   resourceinstance.h
    activitiesmodel.cpp
+   activitiesmodel.h
 
    mainthreadexecutor_p.cpp
+   mainthreadexecutor_p.h
    manager_p.cpp
+   manager_p.h
    activitiescache_p.cpp
+   activitiescache_p.h
 
    ${PLASMA_ACTIVITIES_CURRENT_ROOT_SOURCE_DIR}/src/utils/dbusfuture_p.cpp
 
    version.cpp
+   version.h
 )
 
 set_source_files_properties (

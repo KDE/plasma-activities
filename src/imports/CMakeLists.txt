@@ -10,8 +10,11 @@ ecm_add_qml_module(plasmaactivitiesextensionplugin URI "org.kde.activities" VERS
 
 target_sources(plasmaactivitiesextensionplugin PRIVATE
    activitiesextensionplugin.cpp
+   activitiesextensionplugin.h
    activitymodel.cpp
+   activitymodel.h
    activityinfo.cpp
+   activityinfo.h
 #  resourcemodel.cpp
 
    ${PLASMA_ACTIVITIES_CURRENT_ROOT_SOURCE_DIR}/src/utils/dbusfuture_p.cpp

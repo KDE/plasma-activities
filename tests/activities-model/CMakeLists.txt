@@ -20,6 +20,7 @@ qt_wrap_ui(PlasmaActivitiesModelTestApp_ui_SRCS
 target_sources(PlasmaActivitiesModelTestApp PRIVATE
    ${PlasmaActivitiesModelTestApp_ui_SRCS}
    window.cpp
+   window.h
    main.cpp
 )
 
