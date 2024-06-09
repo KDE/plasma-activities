@@ -15,7 +15,6 @@ target_sources(plasmaactivitiesextensionplugin PRIVATE
    activitymodel.h
    activityinfo.cpp
    activityinfo.h
-#  resourcemodel.cpp
 
    ${PLASMA_ACTIVITIES_CURRENT_ROOT_SOURCE_DIR}/src/utils/dbusfuture_p.cpp
 )
