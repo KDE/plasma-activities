@@ -6,11 +6,9 @@ find_package (Qt6 REQUIRED NO_MODULE COMPONENTS Gui Qml Quick Sql)
 find_package (KF6Config     ${KF6_MIN_VERSION} CONFIG REQUIRED)
 find_package (KF6CoreAddons ${KF6_MIN_VERSION} CONFIG REQUIRED)
 
-ecm_add_qml_module(plasmaactivitiesextensionplugin URI "org.kde.activities" VERSION 0.1)
+ecm_add_qml_module(plasmaactivitiesextensionplugin URI "org.kde.activities" VERSION 0.1 GENERATE_PLUGIN_SOURCE DEPENDENCIES QtCore)
 
 target_sources(plasmaactivitiesextensionplugin PRIVATE
-   activitiesextensionplugin.cpp
-   activitiesextensionplugin.h
    activitymodel.cpp
    activitymodel.h
    activityinfo.cpp

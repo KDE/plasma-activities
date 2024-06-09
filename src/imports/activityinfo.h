@@ -9,6 +9,7 @@
 
 // Qt
 #include <QObject>
+#include <qqmlregistration.h>
 
 // STL
 #include <memory>
@@ -28,6 +29,7 @@ namespace Imports
 class ActivityInfo : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
 
     /**
      * Unique identifier of the activity

@@ -12,6 +12,7 @@
 #include <QCollator>
 #include <QJSValue>
 #include <QObject>
+#include <qqmlregistration.h>
 
 // STL and Boost
 #include <boost/container/flat_set.hpp>
@@ -36,6 +37,7 @@ namespace Imports
 class ActivityModel : public QAbstractListModel
 {
     Q_OBJECT
+    QML_ELEMENT
 
     Q_PROPERTY(QString shownStates READ shownStates WRITE setShownStates NOTIFY shownStatesChanged)
 
