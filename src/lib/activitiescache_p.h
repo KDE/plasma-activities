@@ -16,6 +16,7 @@
 
 #include "activities_interface.h"
 #include "consumer.h"
+#include "manager_p.h"
 
 namespace KActivities
 {
@@ -63,7 +64,7 @@ private Q_SLOTS:
     void setAllActivities(const ActivityInfoList &activities);
     void setCurrentActivity(const QString &activity);
 
-    void setServiceStatus(bool status);
+    void setServiceStatus(Manager::ServiceStatus status);
 
 public:
     template<typename _Result, typename _Functor>

@@ -34,11 +34,11 @@ Manager::Manager()
     , m_resources(new KAMD_DBUS_CLASS_INTERFACE("Resources", Resources, this))
     , m_resourcesLinking(new KAMD_DBUS_CLASS_INTERFACE("Resources/Linking", ResourcesLinking, this))
     , m_features(new KAMD_DBUS_CLASS_INTERFACE("Features", Features, this))
-    , m_serviceRunning(false)
+    , m_serviceStatus(Manager::NotRunning)
 {
     connect(&m_watcher, &QDBusServiceWatcher::serviceOwnerChanged, this, &Manager::serviceOwnerChanged);
 
-    if (isServiceRunning()) {
+    if (serviceStatus()) {
         serviceOwnerChanged(KAMD_DBUS_SERVICE, QString(), KAMD_DBUS_SERVICE);
     }
 }
@@ -51,7 +51,12 @@ Manager *Manager::self()
     if (!s_instance) {
         runInMainThread([]() {
             // check if the activity manager is already running
-            if (!Manager::isServiceRunning()) {
+            // creating a new instance of the class
+            Manager::s_instance = new Manager();
+
+            if (QDBusConnection::sessionBus().interface()->isServiceRegistered(KAMD_DBUS_SERVICE)) { // already running
+                s_instance->m_serviceStatus = Running;
+            } else { // not running
                 bool disableAutolaunch = QCoreApplication::instance()->property("org.kde.KActivities.core.disableAutostart").toBool();
 
                 qCDebug(KAMD_CORELIB) << "Should we start the daemon?";
@@ -59,22 +64,29 @@ Manager *Manager::self()
                 if (!disableAutolaunch && QDBusConnection::sessionBus().interface()) {
                     qCDebug(KAMD_CORELIB) << "Starting the activity manager daemon";
                     auto busInterface = QDBusConnection::sessionBus().interface();
-                    busInterface->asyncCall(QStringLiteral("StartServiceByName"), KAMD_DBUS_SERVICE, uint(0));
+                    auto pending = busInterface->asyncCall(QStringLiteral("StartServiceByName"), KAMD_DBUS_SERVICE, uint(0));
+                    s_instance->m_serviceStatus = Manager::Starting;
+                    QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(pending, s_instance);
+                    connect(watcher, &QDBusPendingCallWatcher::finished, watcher, []() {
+                        const bool isRunning = QDBusConnection::sessionBus().interface()->isServiceRegistered(KAMD_DBUS_SERVICE);
+                        s_instance->m_serviceStatus = isRunning ? Manager::Running : Manager::NotRunning;
+                        Q_EMIT s_instance->serviceStatusChanged(s_instance->m_serviceStatus);
+                    });
                 }
             }
-
-            // creating a new instance of the class
-            Manager::s_instance = new Manager();
         });
     }
-
     return s_instance;
 }
 
 bool Manager::isServiceRunning()
 {
-    return (s_instance ? s_instance->m_serviceRunning : true) && QDBusConnection::sessionBus().interface()
-        && QDBusConnection::sessionBus().interface()->isServiceRegistered(KAMD_DBUS_SERVICE);
+    return s_instance && s_instance->m_serviceStatus == Manager::Running;
+}
+
+Manager::ServiceStatus Manager::serviceStatus()
+{
+    return s_instance ? s_instance->m_serviceStatus : NotRunning;
 }
 
 void Manager::serviceOwnerChanged(const QString &serviceName, const QString &oldOwner, const QString &newOwner)
@@ -82,10 +94,11 @@ void Manager::serviceOwnerChanged(const QString &serviceName, const QString &old
     Q_UNUSED(oldOwner);
 
     if (serviceName == KAMD_DBUS_SERVICE) {
-        m_serviceRunning = !newOwner.isEmpty();
-        Q_EMIT serviceStatusChanged(m_serviceRunning);
+        const bool isRunning = QDBusConnection::sessionBus().interface()->isServiceRegistered(KAMD_DBUS_SERVICE);
+        m_serviceStatus = isRunning ? Manager::Running : Manager::NotRunning;
+        Q_EMIT serviceStatusChanged(m_serviceStatus);
 
-        if (m_serviceRunning) {
+        if (isRunning) {
             using namespace kamd::utils;
 
             continue_with(DBusFuture::fromReply(m_service->serviceVersion()), [this](const std::optional<QString> &serviceVersion) {
@@ -94,7 +107,7 @@ void Manager::serviceOwnerChanged(const QString &serviceName, const QString &old
 
                 if (!serviceVersion.has_value()) {
                     qWarning() << "KActivities: FATAL ERROR: Failed to contact the activity manager daemon";
-                    m_serviceRunning = false;
+                    m_serviceStatus = NotRunning;
                     return;
                 }
 
