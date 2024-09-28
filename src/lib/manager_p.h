@@ -26,9 +26,16 @@ class Manager : public QObject
     Q_OBJECT
 
 public:
+    enum ServiceStatus {
+        NotRunning,
+        Starting,
+        Running,
+    };
+
     static Manager *self();
 
     static bool isServiceRunning();
+    static ServiceStatus serviceStatus();
 
     static Service::Activities *activities();
     static Service::Resources *resources();
@@ -39,7 +46,7 @@ public Q_SLOTS:
     void serviceOwnerChanged(const QString &serviceName, const QString &oldOwner, const QString &newOwner);
 
 Q_SIGNALS:
-    void serviceStatusChanged(bool status);
+    void serviceStatusChanged(ServiceStatus status);
 
 private:
     Manager();
@@ -53,7 +60,7 @@ private:
     Service::Resources *const m_resources;
     Service::ResourcesLinking *const m_resourcesLinking;
     Service::Features *const m_features;
-    bool m_serviceRunning;
+    ServiceStatus m_serviceStatus;
 
     friend class ManagerInstantiator;
 };

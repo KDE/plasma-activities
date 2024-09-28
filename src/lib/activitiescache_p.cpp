@@ -62,28 +62,37 @@ ActivitiesCache::ActivitiesCache()
     // signal void org.kde.ActivityManager.Activities.ActivityStarted(QString activity)
     // signal void org.kde.ActivityManager.Activities.ActivityStopped(QString activity)
 
-    setServiceStatus(Manager::self()->isServiceRunning());
+    setServiceStatus(Manager::self()->serviceStatus());
 }
 
-void ActivitiesCache::setServiceStatus(bool status)
+void ActivitiesCache::setServiceStatus(Manager::ServiceStatus status)
 {
-    // qDebug() << "Setting service status to:" << status;
-    loadOfflineDefaults();
-
-    if (status) {
+    auto oldStatus = m_status;
+    switch (status) {
+    case Manager::NotRunning:
+        m_status = Consumer::NotRunning;
+        loadOfflineDefaults();
+        break;
+    case Manager::Starting:
+        m_status = Consumer::Unknown;
+        break;
+    case Manager::Running:
+        // will become running once loaded
+        m_status = Consumer::Unknown;
         updateAllActivities();
+        break;
+    }
+    if (m_status != oldStatus) {
+        Q_EMIT serviceStatusChanged(m_status);
     }
 }
 
 void ActivitiesCache::loadOfflineDefaults()
 {
-    m_status = Consumer::NotRunning;
-
     m_activities.clear();
     m_activities << ActivityInfo(nulluuid, QString(), QString(), QString(), Info::Running);
     m_currentActivity = nulluuid;
 
-    Q_EMIT serviceStatusChanged(m_status);
     Q_EMIT activityListChanged();
 }
 
@@ -113,10 +122,6 @@ void ActivitiesCache::removeActivity(const QString &id)
 
 void ActivitiesCache::updateAllActivities()
 {
-    // qDebug() << "Updating all";
-    m_status = Consumer::Unknown;
-    Q_EMIT serviceStatusChanged(m_status);
-
     // Loading the current activity
     auto call = Manager::self()->activities()->asyncCall(QStringLiteral("CurrentActivity"));
 
