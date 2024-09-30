@@ -67,11 +67,12 @@ ActivitiesCache::ActivitiesCache()
 
 void ActivitiesCache::setServiceStatus(Manager::ServiceStatus status)
 {
+    loadOfflineDefaults();
+
     auto oldStatus = m_status;
     switch (status) {
     case Manager::NotRunning:
         m_status = Consumer::NotRunning;
-        loadOfflineDefaults();
         break;
     case Manager::Starting:
         m_status = Consumer::Unknown;
