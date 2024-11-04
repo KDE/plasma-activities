@@ -43,7 +43,7 @@ target_sources(PlasmaActivities PRIVATE
 set_source_files_properties (
    ${PLASMA_ACTIVITIES_CURRENT_ROOT_SOURCE_DIR}/src/common/dbus/org.kde.ActivityManager.Activities.xml
    PROPERTIES
-   INCLUDE ${PLASMA_ACTIVITIES_CURRENT_ROOT_SOURCE_DIR}/src/common/dbus/org.kde.ActivityManager.Activities.h
+   INCLUDE ../common/dbus/org.kde.ActivityManager.Activities.h
    )
 
 set(PlasmaActivities_DBus_SRCS)
