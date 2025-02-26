@@ -1,0 +1,13 @@
+description: Activities Libary
+platforms:
+    - name: Linux
+    - name: FreeBSD
+portingAid: false
+deprecated: false
+release: true
+libraries:
+    - cmake: Plasma::Activities
+cmakename: PlasmaActivities
+
+public_lib: true
+group: Plasma
