@@ -32,11 +32,7 @@
 
 // Local
 #include "utils/remove_if.h"
-#define ENABLE_QJSVALUE_CONTINUATION
-#include "utils/continue_with.h"
 #include "utils/model_updaters.h"
-
-using kamd::utils::continue_with;
 
 namespace KActivities
 {
@@ -558,7 +554,9 @@ ActivityModel::InfoPtr ActivityModel::findActivity(QObject *ptr) const
     void ActivityModel::setActivity##What(                                     \
         const QString &id, const QString &value, const QJSValue &callback)     \
     {                                                                          \
-        continue_with(m_service.setActivity##What(id, value), callback);       \
+        m_service.setActivity##What(id, value).then([=]() {                    \
+            callback.call({});                                                 \
+        });                                                                    \
     }
 // clang-format on
 
@@ -571,31 +569,41 @@ CREATE_SETTER(Icon)
 // QFuture<bool> Controller::setCurrentActivity(id)
 void ActivityModel::setCurrentActivity(const QString &id, const QJSValue &callback)
 {
-    continue_with(m_service.setCurrentActivity(id), callback);
+    m_service.setCurrentActivity(id).then([=](bool successful) {
+        callback.call({successful});
+    });
 }
 
 // QFuture<QString> Controller::addActivity(name)
 void ActivityModel::addActivity(const QString &name, const QJSValue &callback)
 {
-    continue_with(m_service.addActivity(name), callback);
+    m_service.addActivity(name).then([=](const QString &activityId) {
+        callback.call({activityId});
+    });
 }
 
 // QFuture<void> Controller::removeActivity(id)
 void ActivityModel::removeActivity(const QString &id, const QJSValue &callback)
 {
-    continue_with(m_service.removeActivity(id), callback);
+    m_service.removeActivity(id).then([=]() {
+        callback.call({});
+    });
 }
 
 // QFuture<void> Controller::stopActivity(id)
 void ActivityModel::stopActivity(const QString &id, const QJSValue &callback)
 {
-    continue_with(m_service.stopActivity(id), callback);
+    m_service.stopActivity(id).then([=]() {
+        callback.call({});
+    });
 }
 
 // QFuture<void> Controller::startActivity(id)
 void ActivityModel::startActivity(const QString &id, const QJSValue &callback)
 {
-    continue_with(m_service.startActivity(id), callback);
+    m_service.startActivity(id).then([=]() {
+        callback.call({});
+    });
 }
 
 } // namespace Imports
