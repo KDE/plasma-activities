@@ -28,7 +28,6 @@ target_link_libraries(
    Plasma::Activities
    KF6::ConfigCore
    KF6::CoreAddons
-   Boost::headers
 )
 
 ecm_finalize_qml_module(plasmaactivitiesextensionplugin DESTINATION ${KDE_INSTALL_QMLDIR})

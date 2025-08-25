@@ -17,9 +17,6 @@
 #include <QHash>
 #include <QModelIndex>
 
-// Local
-#include "utils/remove_if.h"
-
 namespace KActivities
 {
 namespace Private

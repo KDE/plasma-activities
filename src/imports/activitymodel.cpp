@@ -23,15 +23,9 @@
 #include <KConfigGroup>
 #include <KDirWatch>
 
-// Boost
-#include <boost/range/adaptor/filtered.hpp>
-#include <boost/range/algorithm/binary_search.hpp>
-#include <boost/range/algorithm/find_if.hpp>
-
 #include <optional>
 
 // Local
-#include "utils/remove_if.h"
 #include "utils/model_updaters.h"
 
 namespace KActivities
@@ -48,10 +42,10 @@ public:
      * If the state is 0, returns true
      */
     template<typename T>
-    static inline bool matchingState(InfoPtr activity, T states)
+    static inline bool matchingState(InfoPtr activity, const T &states)
     {
         // Are we filtering activities on their states?
-        if (!states.empty() && !boost::binary_search(states, activity->state())) {
+        if (!states.empty() && !std::binary_search(states.begin(), states.end(), activity->state())) {
             return false;
         }
 
@@ -69,7 +63,7 @@ public:
         using ActivityPosition = decltype(activityPosition(container, activityId));
         using ContainerElement = typename _Container::value_type;
 
-        auto position = boost::find_if(container, [&](const ContainerElement &activity) {
+        auto position = std::find_if(container.begin(), container.end(), [&](const ContainerElement &activity) {
             return activity->id() == activityId;
         });
 
@@ -369,7 +363,7 @@ void ActivityModel::showActivity(InfoPtr activityInfo, bool notifyClients)
     }
 
     // Is it already shown?
-    if (boost::binary_search(m_shownActivities, activityInfo, InfoPtrComparator())) {
+    if (std::binary_search(m_shownActivities.begin(), m_shownActivities.end(), activityInfo, InfoPtrComparator())) {
         return;
     }
 
@@ -385,10 +379,10 @@ void ActivityModel::showActivity(InfoPtr activityInfo, bool notifyClients)
     // qDebug() << m_shownStatesString << "Setting activity visibility to true:"
     //     << activityInfoPtr->id() << activityInfoPtr->name();
 
-    auto position = m_shownActivities.insert(activityInfoPtr);
+    auto [insertedIt, _, didInsert] = m_shownActivities.insert(activityInfoPtr);
 
     if (notifyClients) {
-        unsigned int index = (position.second ? position.first : m_shownActivities.end()) - m_shownActivities.begin();
+        unsigned int index = (didInsert ? insertedIt : m_shownActivities.end()) - m_shownActivities.begin();
 
         // qDebug() << m_shownStatesString << " -- MODEL INSERT -- " << index;
         Private::model_insert(this, QModelIndex(), index, index);
@@ -435,7 +429,7 @@ void ActivityModel::onActivityStateChanged(Info::State state)
             return;
         }
 
-        if (boost::binary_search(m_shownStates, state)) {
+        if (std::binary_search(m_shownStates.begin(), m_shownStates.end(), state)) {
             showActivity(info, true);
         } else {
             hideActivity(info->id());
@@ -537,7 +531,7 @@ QVariant ActivityModel::headerData(int section, Qt::Orientation orientation, int
 
 ActivityModel::InfoPtr ActivityModel::findActivity(QObject *ptr) const
 {
-    auto info = boost::find_if(m_knownActivities, [ptr](const InfoPtr &info) {
+    auto info = std::find_if(m_knownActivities.begin(), m_knownActivities.end(), [ptr](const InfoPtr &info) {
         return ptr == info.get();
     });
 
