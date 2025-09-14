@@ -38,21 +38,6 @@ public:
     DECLARE_RAII_MODEL_UPDATERS(ActivityModel)
 
     /**
-     * Returns whether the activity has a desired state.
-     * If the state is 0, returns true
-     */
-    template<typename T>
-    static inline bool matchingState(InfoPtr activity, const T &states)
-    {
-        // Are we filtering activities on their states?
-        if (!states.empty() && !std::binary_search(states.begin(), states.end(), activity->state())) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Searches for the activity.
      * Returns an option(index, iterator) for the found activity.
      */
@@ -257,7 +242,6 @@ QHash<int, QByteArray> ActivityModel::roleNames() const
     return {{Qt::DisplayRole, "name"},
             {Qt::DecorationRole, "icon"},
 
-            {ActivityState, "state"},
             {ActivityId, "id"},
             {ActivityIcon, "iconSource"},
             {ActivityDescription, "description"},
@@ -331,7 +315,6 @@ ActivityModel::InfoPtr ActivityModel::registerActivity(const QString &id)
         connect(ptr, &Info::nameChanged, this, &ActivityModel::onActivityNameChanged);
         connect(ptr, &Info::descriptionChanged, this, &ActivityModel::onActivityDescriptionChanged);
         connect(ptr, &Info::iconChanged, this, &ActivityModel::onActivityIconChanged);
-        connect(ptr, &Info::stateChanged, this, &ActivityModel::onActivityStateChanged);
 
         m_knownActivities.insert(InfoPtr(activityInfo));
 
@@ -357,11 +340,6 @@ void ActivityModel::unregisterActivity(const QString &id)
 
 void ActivityModel::showActivity(InfoPtr activityInfo, bool notifyClients)
 {
-    // Should it really be shown?
-    if (!Private::matchingState(activityInfo, m_shownStates)) {
-        return;
-    }
-
     // Is it already shown?
     if (std::binary_search(m_shownActivities.begin(), m_shownActivities.end(), activityInfo, InfoPtrComparator())) {
         return;
@@ -417,61 +395,11 @@ CREATE_SIGNAL_EMITTER(Icon, Qt::DecorationRole)
 
 #undef CREATE_SIGNAL_EMITTER
 
-void ActivityModel::onActivityStateChanged(Info::State state)
-{
-    if (m_shownStates.empty()) {
-        Private::emitActivityUpdated(this, m_shownActivities, sender(), ActivityState);
-
-    } else {
-        auto info = findActivity(sender());
-
-        if (!info) {
-            return;
-        }
-
-        if (std::binary_search(m_shownStates.begin(), m_shownStates.end(), state)) {
-            showActivity(info, true);
-        } else {
-            hideActivity(info->id());
-        }
-    }
-}
-
 void ActivityModel::backgroundsUpdated(const QStringList &activities)
 {
     for (const auto &activity : activities) {
         Private::emitActivityUpdated(this, m_shownActivities, activity, ActivityBackground);
     }
-}
-
-void ActivityModel::setShownStates(const QString &states)
-{
-    m_shownStates.clear();
-    m_shownStatesString = states;
-
-    for (const auto &state : states.split(QLatin1Char(','))) {
-        if (state == QLatin1String("Running")) {
-            m_shownStates.insert(Running);
-
-        } else if (state == QLatin1String("Starting")) {
-            m_shownStates.insert(Starting);
-
-        } else if (state == QLatin1String("Stopped")) {
-            m_shownStates.insert(Stopped);
-
-        } else if (state == QLatin1String("Stopping")) {
-            m_shownStates.insert(Stopping);
-        }
-    }
-
-    replaceActivities(m_service.activities());
-
-    Q_EMIT shownStatesChanged(states);
-}
-
-QString ActivityModel::shownStates() const
-{
-    return m_shownStatesString;
 }
 
 int ActivityModel::rowCount(const QModelIndex &parent) const
@@ -495,9 +423,6 @@ QVariant ActivityModel::data(const QModelIndex &index, int role) const
 
     case ActivityId:
         return item->id();
-
-    case ActivityState:
-        return item->state();
 
     case ActivityIcon: {
         const QString &icon = item->icon();
@@ -580,22 +505,6 @@ void ActivityModel::addActivity(const QString &name, const QJSValue &callback)
 void ActivityModel::removeActivity(const QString &id, const QJSValue &callback)
 {
     m_service.removeActivity(id).then([=]() {
-        callback.call({});
-    });
-}
-
-// QFuture<void> Controller::stopActivity(id)
-void ActivityModel::stopActivity(const QString &id, const QJSValue &callback)
-{
-    m_service.stopActivity(id).then([=]() {
-        callback.call({});
-    });
-}
-
-// QFuture<void> Controller::startActivity(id)
-void ActivityModel::startActivity(const QString &id, const QJSValue &callback)
-{
-    m_service.startActivity(id).then([=]() {
         callback.call({});
     });
 }

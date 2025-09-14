@@ -56,20 +56,6 @@ DEFINE_COMMAND(removeActivity, 1)
     return 1;
 }
 
-DEFINE_COMMAND(startActivity, 1)
-{
-    awaitFuture(controller->startActivity(args(1)));
-
-    return 1;
-}
-
-DEFINE_COMMAND(stopActivity, 1)
-{
-    awaitFuture(controller->stopActivity(args(1)));
-
-    return 1;
-}
-
 DEFINE_COMMAND(listActivities, 0)
 {
     for (const auto &activity : controller->activities()) {
@@ -153,8 +139,6 @@ void printHelp()
                  << "\n    --list-activities        - lists all activities"
                  << "\n    --create-activity Name   - creates a new activity with the specified name"
                  << "\n    --remove-activity ID     - removes the activity with the specified id"
-                 << "\n    --start-activity ID      - starts the specified activity"
-                 << "\n    --stop-activity ID       - stops the specified activity"
 
                  << "\n    --current-activity       - show the current activity"
                  << "\n    --set-current-activity   - sets the current activity"
@@ -228,8 +212,6 @@ int main(int argc, char *argv[])
 
                 MATCH_COMMAND(createActivity)
                 MATCH_COMMAND(removeActivity)
-                MATCH_COMMAND(startActivity)
-                MATCH_COMMAND(stopActivity)
 
                 else
                 {

@@ -32,12 +32,6 @@ Consumer::Consumer(QObject *parent)
     connect(d->cache.get(), &ActivitiesCache::activityListChanged, this, [=, this]() {
         Q_EMIT activitiesChanged(activities());
     });
-    connect(d->cache.get(), &ActivitiesCache::runningActivityListChanged, this, [=, this]() {
-        Q_EMIT runningActivitiesChanged(runningActivities());
-    });
-
-    // connect(d->cache.get(), SIGNAL(activityStateChanged(QString,int)),
-    //         this, SIGNAL(activityStateChanged(QString,int)));
 }
 
 Consumer::~Consumer() = default;
@@ -45,21 +39,6 @@ Consumer::~Consumer() = default;
 QString Consumer::currentActivity() const
 {
     return d->cache->m_currentActivity;
-}
-
-QStringList Consumer::activities(Info::State state) const
-{
-    QStringList result;
-
-    result.reserve(d->cache->m_activities.size());
-
-    for (const auto &info : std::as_const(d->cache->m_activities)) {
-        if (info.state == state) {
-            result << info.id;
-        }
-    }
-
-    return result;
 }
 
 QStringList Consumer::activities() const
@@ -70,21 +49,6 @@ QStringList Consumer::activities() const
 
     for (const auto &info : std::as_const(d->cache->m_activities)) {
         result << info.id;
-    }
-
-    return result;
-}
-
-QStringList Consumer::runningActivities() const
-{
-    QStringList result;
-
-    result.reserve(d->cache->m_activities.size());
-
-    for (const auto &info : std::as_const(d->cache->m_activities)) {
-        if (info.state == Info::Running || info.state == Info::Stopping) {
-            result << info.id;
-        }
     }
 
     return result;
