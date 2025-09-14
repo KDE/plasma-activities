@@ -34,7 +34,6 @@ Q_SIGNALS:
     void activityChanged(const QString &id);
     void activityRemoved(const QString &id);
 
-    void activityStateChanged(const QString &id, int state);
     void activityNameChanged(const QString &id, const QString &name);
     void activityDescriptionChanged(const QString &id, const QString &description);
     void activityIconChanged(const QString &id, const QString &icon);
@@ -42,14 +41,12 @@ Q_SIGNALS:
     void currentActivityChanged(const QString &id);
     void serviceStatusChanged(Consumer::ServiceStatus status);
     void activityListChanged();
-    void runningActivityListChanged();
 
 private Q_SLOTS:
     void updateAllActivities();
     void loadOfflineDefaults();
 
     void updateActivity(const QString &id);
-    void updateActivityState(const QString &id, int state);
     void removeActivity(const QString &id);
 
     void setActivityInfoFromReply(QDBusPendingCallWatcher *watcher);

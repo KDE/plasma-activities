@@ -39,8 +39,6 @@ class ActivityModel : public QAbstractListModel
     Q_OBJECT
     QML_ELEMENT
 
-    Q_PROPERTY(QString shownStates READ shownStates WRITE setShownStates NOTIFY shownStatesChanged)
-
 public:
     explicit ActivityModel(QObject *parent = nullptr);
     ~ActivityModel() override;
@@ -57,20 +55,9 @@ public:
         ActivityId = Qt::UserRole,
         ActivityDescription = Qt::UserRole + 1,
         ActivityIcon = Qt::UserRole + 2,
-        ActivityState = Qt::UserRole + 3,
         ActivityBackground = Qt::UserRole + 4,
         ActivityCurrent = Qt::UserRole + 5,
     };
-
-    enum State {
-        All = 0,
-        Invalid = 0,
-        Running = 2,
-        Starting = 3,
-        Stopped = 4,
-        Stopping = 5,
-    };
-    Q_ENUM(State)
 
 public Q_SLOTS:
     // Activity control methods
@@ -83,13 +70,6 @@ public Q_SLOTS:
     void addActivity(const QString &name, const QJSValue &callback);
     void removeActivity(const QString &id, const QJSValue &callback);
 
-    void stopActivity(const QString &id, const QJSValue &callback);
-    void startActivity(const QString &id, const QJSValue &callback);
-
-    // Model property getters and setters
-    void setShownStates(const QString &states);
-    QString shownStates() const;
-
 Q_SIGNALS:
     void shownStatesChanged(const QString &state);
 
@@ -97,7 +77,6 @@ private Q_SLOTS:
     void onActivityNameChanged(const QString &name);
     void onActivityDescriptionChanged(const QString &description);
     void onActivityIconChanged(const QString &icon);
-    void onActivityStateChanged(KActivities::Info::State state);
 
     void replaceActivities(const QStringList &activities);
     void onActivityAdded(const QString &id, bool notifyClients = true);
@@ -108,8 +87,6 @@ private Q_SLOTS:
 
 private:
     KActivities::Controller m_service;
-    QFlatSet<State, std::less<State>> m_shownStates;
-    QString m_shownStatesString;
 
     typedef std::shared_ptr<Info> InfoPtr;
 

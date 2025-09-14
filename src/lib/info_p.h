@@ -19,17 +19,12 @@ class InfoPrivate
 public:
     InfoPrivate(Info *info, const QString &activity);
 
-    void activityStateChanged(const QString &, int) const;
-
     void added(const QString &) const;
     void removed(const QString &) const;
-    void started(const QString &) const;
-    void stopped(const QString &) const;
     void infoChanged(const QString &) const;
     void nameChanged(const QString &, const QString &) const;
     void descriptionChanged(const QString &, const QString &) const;
     void iconChanged(const QString &, const QString &) const;
-    void setServiceStatus(Consumer::ServiceStatus status) const;
     void setCurrentActivity(const QString &currentActivity);
 
     Info *const q;

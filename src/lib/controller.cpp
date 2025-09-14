@@ -70,24 +70,6 @@ QFuture<void> Controller::removeActivity(const QString &id)
     return Manager::isServiceRunning() ? DBusFuture::asyncCall<void>(Manager::activities(), QStringLiteral("RemoveActivity"), id) : DBusFuture::fromVoid();
 }
 
-QFuture<void> Controller::stopActivity(const QString &id)
-{
-    // Q_ASSERT_X(activities().contains(id), "Controller::stopActivity",
-    //            "You can not stop a non-existent activity");
-
-    // Manager::activities()->StopActivity(id);
-    return Manager::isServiceRunning() ? DBusFuture::asyncCall<void>(Manager::activities(), QStringLiteral("StopActivity"), id) : DBusFuture::fromVoid();
-}
-
-QFuture<void> Controller::startActivity(const QString &id)
-{
-    // Q_ASSERT_X(activities().contains(id), "Controller::startActivity",
-    //            "You can not start an non-existent activity");
-
-    // Manager::activities()->StartActivity(id);
-    return Manager::isServiceRunning() ? DBusFuture::asyncCall<void>(Manager::activities(), QStringLiteral("StartActivity"), id) : DBusFuture::fromVoid();
-}
-
 QFuture<void> Controller::previousActivity()
 {
     return Manager::isServiceRunning() ? DBusFuture::asyncCall<void>(Manager::activities(), QStringLiteral("PreviousActivity")) : DBusFuture::fromVoid();

@@ -64,16 +64,10 @@ class PLASMA_ACTIVITIES_EXPORT Info : public QObject
     Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
     Q_PROPERTY(QString icon READ icon NOTIFY iconChanged)
     Q_PROPERTY(bool isCurrent READ isCurrent NOTIFY isCurrentChanged)
-    Q_PROPERTY(Info::State state READ state NOTIFY stateChanged)
 
 public:
     explicit Info(const QString &activity, QObject *parent = nullptr);
     ~Info() override;
-
-    /**
-     * @return true if the activity represented by this object exists and is valid
-     */
-    bool isValid() const;
 
     /**
      * Specifies which parts of this class are functional
@@ -82,18 +76,6 @@ public:
         Nothing = 0, ///< No activity info provided (isValid is false)
         BasicInfo = 1, ///< Basic info is provided
         Everything = 2, ///< Everything is available
-    };
-
-    /**
-     * State of the activity
-     */
-    enum State {
-        Invalid = 0, ///< This activity does not exist
-        Unknown = 1, ///< Information is not yet retrieved from the service
-        Running = 2, ///< Activity is running
-        Starting = 3, ///< Activity is begin started
-        Stopped = 4, ///< Activity is stopped
-        Stopping = 5, ///< Activity is begin started
     };
 
     /**
@@ -132,11 +114,6 @@ public:
      * a file path. Or empty if no icon is set.
      */
     QString icon() const;
-
-    /**
-     * @returns the state of the activity
-     */
-    State state() const;
 
     /**
      * Links the specified resource to the activity
@@ -199,35 +176,15 @@ Q_SIGNALS:
      */
     void removed();
 
-    /**
-     * Emitted when the activity is started
-     */
-    void started();
-
-    /**
-     * Emitted when the activity is stopped
-     */
-    void stopped();
-
-    /**
-     * Emitted when the activity changes state
-     * @param state new state of the activity
-     */
-    void stateChanged(KActivities::Info::State state);
-
 private:
     const std::unique_ptr<InfoPrivate> d;
 
-    Q_PRIVATE_SLOT(d, void activityStateChanged(const QString &, int))
     Q_PRIVATE_SLOT(d, void added(const QString &))
     Q_PRIVATE_SLOT(d, void removed(const QString &))
-    Q_PRIVATE_SLOT(d, void started(const QString &))
-    Q_PRIVATE_SLOT(d, void stopped(const QString &))
     Q_PRIVATE_SLOT(d, void infoChanged(const QString &))
     Q_PRIVATE_SLOT(d, void nameChanged(const QString &, const QString &))
     Q_PRIVATE_SLOT(d, void descriptionChanged(const QString &, const QString &))
     Q_PRIVATE_SLOT(d, void iconChanged(const QString &, const QString &))
-    Q_PRIVATE_SLOT(d, void setServiceStatus(Consumer::ServiceStatus))
     Q_PRIVATE_SLOT(d, void setCurrentActivity(const QString &))
 
     friend class InfoPrivate;
