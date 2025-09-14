@@ -87,18 +87,6 @@ public:
     QFuture<void> removeActivity(const QString &id);
 
     /**
-     * Stops the activity
-     * @param id id of the activity to stop
-     */
-    QFuture<void> stopActivity(const QString &id);
-
-    /**
-     * Starts the activity
-     * @param id id of the activity to start
-     */
-    QFuture<void> startActivity(const QString &id);
-
-    /**
      * Switches to the previous activity
      */
     QFuture<void> previousActivity();

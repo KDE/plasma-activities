@@ -27,7 +27,6 @@ public Q_SLOTS:
     void onActivityNameChanged(const QString &name);
     void onActivityDescriptionChanged(const QString &description);
     void onActivityIconChanged(const QString &icon);
-    void onActivityStateChanged(KActivities::Info::State state);
 
     void replaceActivities(const QStringList &activities);
     void onActivityAdded(const QString &id, bool notifyClients = true);
@@ -38,7 +37,6 @@ public Q_SLOTS:
 
 public:
     KActivities::Consumer activities;
-    QList<Info::State> shownStates;
 
     typedef std::shared_ptr<Info> InfoPtr;
 

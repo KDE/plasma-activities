@@ -66,7 +66,6 @@ class PLASMA_ACTIVITIES_EXPORT Consumer : public QObject
 
     Q_PROPERTY(QString currentActivity READ currentActivity NOTIFY currentActivityChanged)
     Q_PROPERTY(QStringList activities READ activities NOTIFY activitiesChanged)
-    Q_PROPERTY(QStringList runningActivities READ runningActivities NOTIFY runningActivitiesChanged)
     Q_PROPERTY(ServiceStatus serviceStatus READ serviceStatus NOTIFY serviceStatusChanged)
 
 public:
@@ -90,20 +89,6 @@ public:
      *       string in the case there is no current activity.
      */
     QString currentActivity() const;
-
-    /**
-     * @returns the list of activities filtered by state
-     * @param state state of the activity
-     * @note If the serviceStatus is not Running, only a null activity will be
-     *       returned.
-     */
-    QStringList activities(Info::State state) const;
-
-    /**
-     * @returns a list of running activities
-     * This is a convenience method that returns Running and Stopping activities
-     */
-    QStringList runningActivities() const;
 
     /**
      * @returns the list of all existing activities
@@ -148,12 +133,6 @@ Q_SIGNALS:
      * @param activities list of activities
      */
     void activitiesChanged(const QStringList &activities);
-
-    /**
-     * This signal is emitted when the list of running activities changes
-     * @param runningActivities list of running activities
-     */
-    void runningActivitiesChanged(const QStringList &runningActivities);
 
 private:
     const std::unique_ptr<ConsumerPrivate> d;

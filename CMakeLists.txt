@@ -47,7 +47,7 @@ ecm_setup_version (
    VARIABLE_PREFIX PLASMA_ACTIVITIES
    VERSION_HEADER "${plasma_activities_version_header}"
    PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/PlasmaActivitiesConfigVersion.cmake"
-   SOVERSION 6
+   SOVERSION 7
    )
 
 ecm_set_disabled_deprecation_versions(

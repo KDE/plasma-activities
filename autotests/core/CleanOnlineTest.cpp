@@ -43,8 +43,6 @@ void CleanOnlineTest::testCleanOnlineActivityListing()
     QCOMPARE(activities->currentActivity(), QString());
 
     QCOMPARE(activities->activities(), QStringList());
-    QCOMPARE(activities->activities(KActivities::Info::Running), QStringList());
-    QCOMPARE(activities->activities(KActivities::Info::Stopped), QStringList());
 }
 
 void CleanOnlineSetup::testCleanOnlineActivityControl()

@@ -29,8 +29,6 @@ void OfflineTest::testOfflineActivityListing()
     QCOMPARE(activities->currentActivity(), nulluuid);
 
     QCOMPARE(activities->activities(), QStringList() << nulluuid);
-    QCOMPARE(activities->activities(KActivities::Info::Running), QStringList() << nulluuid);
-    QCOMPARE(activities->activities(KActivities::Info::Stopped), QStringList());
 }
 
 void OfflineTest::testOfflineActivityControl()
@@ -55,12 +53,6 @@ void OfflineTest::testOfflineActivityControl()
         QCOMPARE(inMethod, true);
     });
     continue_future(activities->removeActivity(QStringLiteral("Activity")), []() {
-        QCOMPARE(inMethod, true);
-    });
-    continue_future(activities->startActivity(QStringLiteral("Activity")), []() {
-        QCOMPARE(inMethod, true);
-    });
-    continue_future(activities->stopActivity(QStringLiteral("Activity")), []() {
         QCOMPARE(inMethod, true);
     });
 

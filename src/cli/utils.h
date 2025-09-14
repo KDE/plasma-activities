@@ -76,14 +76,6 @@ void printActivity(const QString &id)
         Info info(id);
 
         out
-            << (
-                info.id() == controller->currentActivity() ? "[CURRENT] " :
-                info.state() == Info::Running    ? "[RUNNING] " :
-                info.state() == Info::Stopped    ? "[STOPPED] " :
-                info.state() == Info::Starting   ? "[STARTING]" :
-                info.state() == Info::Stopping   ? "[STOPPING]" :
-                                                   "unknown   "
-            )
             << info.id()
             << " "
             << info.name()
@@ -91,19 +83,6 @@ void printActivity(const QString &id)
             << info.icon()
             << ")\n"
              ;
-
-        if (info.id() == controller->currentActivity()
-            && info.state() != Info::Running) {
-            qWarning()
-                 << "Activity is the current one, but its state is"
-                 << (
-                    info.state() == Info::Running  ? "running"  :
-                    info.state() == Info::Stopped  ? "stopped"  :
-                    info.state() == Info::Starting ? "starting" :
-                    info.state() == Info::Stopping ? "stopping" :
-                                                     "unknown   "
-                 );
-        }
     }
     // clang-format on
 }

@@ -49,7 +49,6 @@ ActivitiesCache::ActivitiesCache()
     connect(activities, &Activities::ActivityChanged, this, &ActivitiesCache::updateActivity);
     connect(activities, &Activities::ActivityRemoved, this, &ActivitiesCache::removeActivity);
 
-    connect(activities, &Activities::ActivityStateChanged, this, &ActivitiesCache::updateActivityState);
     connect(activities, &Activities::ActivityNameChanged, this, &ActivitiesCache::setActivityName);
     connect(activities, &Activities::ActivityDescriptionChanged, this, &ActivitiesCache::setActivityDescription);
     connect(activities, &Activities::ActivityIconChanged, this, &ActivitiesCache::setActivityIcon);
@@ -91,7 +90,7 @@ void ActivitiesCache::setServiceStatus(Manager::ServiceStatus status)
 void ActivitiesCache::loadOfflineDefaults()
 {
     m_activities.clear();
-    m_activities << ActivityInfo(nulluuid, QString(), QString(), QString(), Info::Running);
+    m_activities << ActivityInfo(nulluuid, QString(), QString(), QString());
     m_currentActivity = nulluuid;
 
     Q_EMIT activityListChanged();
@@ -143,37 +142,6 @@ void ActivitiesCache::updateActivity(const QString &id)
     onCallFinished(call, SLOT(setActivityInfoFromReply(QDBusPendingCallWatcher *)));
 }
 
-void ActivitiesCache::updateActivityState(const QString &id, int state)
-{
-    auto where = getInfo<Mutable>(id);
-
-    if (where && where->state != state) {
-        auto isInvalid = [](int state) {
-            return state == Info::Invalid || state == Info::Unknown;
-        };
-        auto isStopped = [](int state) {
-            return state == Info::Stopped || state == Info::Starting;
-        };
-        auto isRunning = [](int state) {
-            return state == Info::Running || state == Info::Stopping;
-        };
-
-        const bool runningStateChanged =
-            (isInvalid(state) || isInvalid(where->state) || (isStopped(state) && isRunning(where->state)) || (isRunning(state) && isStopped(where->state)));
-
-        where->state = state;
-
-        if (runningStateChanged) {
-            Q_EMIT runningActivityListChanged();
-        }
-
-        Q_EMIT activityStateChanged(id, state);
-
-    } else {
-        // qFatal("Requested to update the state of a non-existent activity");
-    }
-}
-
 template<typename _Result, typename _Functor>
 void ActivitiesCache::passInfoFromReply(QDBusPendingCallWatcher *watcher, _Functor f)
 {
@@ -214,11 +182,9 @@ void ActivitiesCache::setActivityInfo(const ActivityInfo &info)
     // Are we updating an existing activity, or adding a new one?
     const auto iter = find(info.id);
     const auto present = iter != m_activities.end();
-    bool runningChanged = true;
     // If there is an activity with the specified id,
     // we are going to remove it, temporarily.
     if (present) {
-        runningChanged = (*iter).state != info.state;
         m_activities.erase(iter);
     }
 
@@ -233,9 +199,6 @@ void ActivitiesCache::setActivityInfo(const ActivityInfo &info)
     } else {
         Q_EMIT activityAdded(info.id);
         Q_EMIT activityListChanged();
-        if (runningChanged) {
-            Q_EMIT runningActivityListChanged();
-        }
     }
 }
 // clang-format off

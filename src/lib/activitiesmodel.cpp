@@ -50,16 +50,6 @@ struct ActivityPosition {
 };
 
 /**
- * Returns whether the activity has a desired state.
- * If the state is 0, returns true
- */
-template<typename T>
-inline bool matchingState(ActivitiesModelPrivate::InfoPtr activity, const T &states)
-{
-    return states.empty() || states.contains(activity->state());
-}
-
-/**
  * Searches for the activity.
  * Returns an option(index, iterator) for the found activity.
  */
@@ -127,36 +117,11 @@ ActivitiesModel::ActivitiesModel(QObject *parent)
     d->setServiceStatus(d->activities.serviceStatus());
 }
 
-ActivitiesModel::ActivitiesModel(QList<Info::State> shownStates, QObject *parent)
-    : QAbstractListModel(parent)
-    , d(new ActivitiesModelPrivate(this))
-{
-    d->shownStates = shownStates;
-
-    // Initializing role names for qml
-    connect(&d->activities, &Consumer::serviceStatusChanged, this, [this](Consumer::ServiceStatus status) {
-        d->setServiceStatus(status);
-    });
-
-    connect(&d->activities, &Consumer::activityAdded, this, [this](const QString &activity) {
-        d->onActivityAdded(activity);
-    });
-    connect(&d->activities, &Consumer::activityRemoved, this, [this](const QString &activity) {
-        d->onActivityRemoved(activity);
-    });
-    connect(&d->activities, &Consumer::currentActivityChanged, this, [this](const QString &activity) {
-        d->onCurrentActivityChanged(activity);
-    });
-
-    d->setServiceStatus(d->activities.serviceStatus());
-}
-
 ActivitiesModel::~ActivitiesModel() = default;
 
 QHash<int, QByteArray> ActivitiesModel::roleNames() const
 {
     return {{ActivityName, "name"},
-            {ActivityState, "state"},
             {ActivityId, "id"},
             {ActivityIconSource, "iconSource"},
             {ActivityDescription, "description"},
@@ -220,7 +185,6 @@ ActivitiesModelPrivate::InfoPtr ActivitiesModelPrivate::registerActivity(const Q
         connect(ptr, &Info::nameChanged, this, &ActivitiesModelPrivate::onActivityNameChanged);
         connect(ptr, &Info::descriptionChanged, this, &ActivitiesModelPrivate::onActivityDescriptionChanged);
         connect(ptr, &Info::iconChanged, this, &ActivitiesModelPrivate::onActivityIconChanged);
-        connect(ptr, &Info::stateChanged, this, &ActivitiesModelPrivate::onActivityStateChanged);
 
         knownActivities.insert(InfoPtr(activityInfo));
 
@@ -245,11 +209,6 @@ void ActivitiesModelPrivate::unregisterActivity(const QString &id)
 
 void ActivitiesModelPrivate::showActivity(InfoPtr activityInfo, bool notifyClients)
 {
-    // Should it really be shown?
-    if (!Private::matchingState(activityInfo, shownStates)) {
-        return;
-    }
-
     // Is it already shown?
     if (std::binary_search(shownActivities.cbegin(), shownActivities.cend(), activityInfo, InfoPtrComparator())) {
         return;
@@ -301,40 +260,6 @@ CREATE_SIGNAL_EMITTER(Icon, Qt::DecorationRole)
 
 #undef CREATE_SIGNAL_EMITTER
 
-void ActivitiesModelPrivate::onActivityStateChanged(Info::State state)
-{
-    if (shownStates.empty()) {
-        Private::emitActivityUpdated(this, shownActivities, sender(), ActivitiesModel::ActivityState);
-
-    } else {
-        auto info = findActivity(sender());
-
-        if (!info) {
-            return;
-        }
-
-        if (shownStates.contains(state)) {
-            showActivity(info, true);
-        } else {
-            hideActivity(info->id());
-        }
-    }
-}
-
-void ActivitiesModel::setShownStates(const QList<Info::State> &states)
-{
-    d->shownStates = states;
-
-    d->replaceActivities(d->activities.activities());
-
-    Q_EMIT shownStatesChanged(states);
-}
-
-QList<Info::State> ActivitiesModel::shownStates() const
-{
-    return d->shownStates;
-}
-
 int ActivitiesModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid()) {
@@ -356,9 +281,6 @@ QVariant ActivitiesModel::data(const QModelIndex &index, int role) const
 
     case ActivityId:
         return item->id();
-
-    case ActivityState:
-        return item->state();
 
     case Qt::DecorationRole:
     case ActivityIconSource: {
