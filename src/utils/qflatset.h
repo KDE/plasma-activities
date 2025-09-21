@@ -20,14 +20,20 @@ public:
     {
     }
 
-    inline std::tuple<typename QList<T>::iterator, int, bool> insert(const T &value)
+    struct InsertionResult {
+        typename QList<T>::iterator insertedIterator;
+        int insertedIndex{};
+        bool didInsert{};
+    };
+
+    inline InsertionResult insert(const T &value)
     {
         auto lessThan = LessThan();
 
         if (this->begin() == this->end()) {
             QList<T>::insert(0, value);
 
-            return std::make_tuple(QList<T>::begin(), 0, true);
+            return InsertionResult{QList<T>::begin(), 0, true};
 
         } else {
             auto iterator = std::lower_bound(this->begin(), this->end(), value, lessThan);
@@ -35,13 +41,13 @@ public:
             if (iterator != this->end()) {
                 if (!lessThan(value, *iterator)) {
                     // Already present
-                    return std::make_tuple(iterator, iterator - this->begin(), false);
+                    return InsertionResult{iterator, int(iterator - this->begin()), false};
                 }
             }
 
             auto newIterator = QList<T>::insert(iterator, value);
 
-            return std::make_tuple(newIterator, newIterator - this->begin(), true);
+            return InsertionResult{newIterator, int(newIterator - this->begin()), true};
         }
     }
 

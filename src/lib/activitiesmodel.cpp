@@ -268,7 +268,7 @@ void ActivitiesModelPrivate::showActivity(InfoPtr activityInfo, bool notifyClien
     // const auto [iterator, index, found] = shownActivities.insert(...);
     const auto _result = shownActivities.insert(activityInfoPtr);
     // const auto iterator = std::get<0>(_result);
-    const auto index = std::get<1>(_result);
+    const auto index = _result.insertedIndex;
 
     if (notifyClients) {
         q->beginInsertRows(QModelIndex(), index, index);
