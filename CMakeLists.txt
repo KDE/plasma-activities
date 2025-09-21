@@ -15,6 +15,7 @@ find_package(ECM ${KF6_MIN_VERSION} REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
 option (PLASMA_ACTIVITIES_LIBRARY_ONLY "If true, compiles only the PlasmaActivities library, without the QML imports." OFF)
+option (PLASMA_ACTIVITIES_ENABLE_EXCEPTIONS "If you have Boost 1.53, you need to build PlasmaActivities with exceptions enabled. This is UNTESTED and EXPERIMENTAL!" OFF)
 
 set (PLASMA_ACTIVITIES_CURRENT_ROOT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 

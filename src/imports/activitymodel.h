@@ -14,11 +14,11 @@
 #include <QObject>
 #include <qqmlregistration.h>
 
-// STL
+// STL and Boost
+#include <boost/container/flat_set.hpp>
 #include <memory>
 
 // Local
-#include "utils/qflatset.h"
 #include <lib/consumer.h>
 #include <lib/controller.h>
 #include <lib/info.h>
@@ -108,7 +108,7 @@ private Q_SLOTS:
 
 private:
     KActivities::Controller m_service;
-    QFlatSet<State, std::less<State>> m_shownStates;
+    boost::container::flat_set<State> m_shownStates;
     QString m_shownStatesString;
 
     typedef std::shared_ptr<Info> InfoPtr;
@@ -127,8 +127,8 @@ private:
         }
     };
 
-    QFlatSet<InfoPtr, InfoPtrComparator> m_knownActivities;
-    QFlatSet<InfoPtr, InfoPtrComparator> m_shownActivities;
+    boost::container::flat_set<InfoPtr, InfoPtrComparator> m_knownActivities;
+    boost::container::flat_set<InfoPtr, InfoPtrComparator> m_shownActivities;
 
     InfoPtr registerActivity(const QString &id);
     void unregisterActivity(const QString &id);
