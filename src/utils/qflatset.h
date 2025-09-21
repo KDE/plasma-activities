@@ -20,10 +20,7 @@ public:
     {
     }
 
-    inline
-        // QPair<typename QList<T>::iterator, bool> insert(const T &value)
-        std::tuple<typename QList<T>::iterator, int, bool>
-        insert(const T &value)
+    inline std::tuple<typename QList<T>::iterator, int, bool> insert(const T &value)
     {
         auto lessThan = LessThan();
 
