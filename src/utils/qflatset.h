@@ -26,27 +26,25 @@ public:
         insert(const T &value)
     {
         auto lessThan = LessThan();
-        auto begin = this->begin();
-        auto end = this->end();
 
-        if (begin == end) {
+        if (this->begin() == this->end()) {
             QList<T>::insert(0, value);
 
             return std::make_tuple(QList<T>::begin(), 0, true);
 
         } else {
-            auto iterator = std::lower_bound(begin, end, value, lessThan);
+            auto iterator = std::lower_bound(this->begin(), this->end(), value, lessThan);
 
-            if (iterator != end) {
+            if (iterator != this->end()) {
                 if (!lessThan(value, *iterator)) {
                     // Already present
-                    return std::make_tuple(iterator, iterator - begin, false);
+                    return std::make_tuple(iterator, iterator - this->begin(), false);
                 }
             }
 
-            QList<T>::insert(iterator, value);
+            auto newIterator = QList<T>::insert(iterator, value);
 
-            return std::make_tuple(iterator, iterator - begin, true);
+            return std::make_tuple(newIterator, newIterator - this->begin(), true);
         }
     }
 
