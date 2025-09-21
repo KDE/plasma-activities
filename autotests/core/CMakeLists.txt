@@ -34,3 +34,8 @@ target_link_libraries(PlasmaActivitiesTest
 )
 
 endif ()
+
+add_executable(QFlatSetTest QFlatSetTest.cpp)
+target_link_libraries(QFlatSetTest PRIVATE Qt6::Core Qt6::Test)
+target_include_directories(QFlatSetTest PRIVATE ${PLASMA_ACTIVITIES_CURRENT_ROOT_SOURCE_DIR}/src/)
+add_test(NAME QFlatSetTest COMMAND QFlatSetTest)
