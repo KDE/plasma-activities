@@ -78,6 +78,7 @@ inline void continue_with(const QFuture<_ReturnType> &future, _Continuation &&co
 
     auto watcher = new QFutureWatcher<_ReturnType>();
     QObject::connect(watcher, &QFutureWatcherBase::finished, [=]() mutable {
+        watcher->deleteLater();
         detail::pass_value(future, continuation);
     });
 
