@@ -26,7 +26,11 @@
 #include <optional>
 
 // Local
+#define ENABLE_QJSVALUE_CONTINUATION
+#include "utils/continue_with.h"
 #include "utils/model_updaters.h"
+
+using kamd::utils::continue_with;
 
 namespace KActivities
 {
@@ -473,9 +477,7 @@ ActivityModel::InfoPtr ActivityModel::findActivity(QObject *ptr) const
     void ActivityModel::setActivity##What(                                     \
         const QString &id, const QString &value, const QJSValue &callback)     \
     {                                                                          \
-        m_service.setActivity##What(id, value).then([=]() {                    \
-            callback.call({});                                                 \
-        });                                                                    \
+        continue_with(m_service.setActivity##What(id, value), callback);       \
     }
 // clang-format on
 
@@ -488,25 +490,19 @@ CREATE_SETTER(Icon)
 // QFuture<bool> Controller::setCurrentActivity(id)
 void ActivityModel::setCurrentActivity(const QString &id, const QJSValue &callback)
 {
-    m_service.setCurrentActivity(id).then([=](bool successful) {
-        callback.call({successful});
-    });
+    continue_with(m_service.setCurrentActivity(id), callback);
 }
 
 // QFuture<QString> Controller::addActivity(name)
 void ActivityModel::addActivity(const QString &name, const QJSValue &callback)
 {
-    m_service.addActivity(name).then([=](const QString &activityId) {
-        callback.call({activityId});
-    });
+    continue_with(m_service.addActivity(name), callback);
 }
 
 // QFuture<void> Controller::removeActivity(id)
 void ActivityModel::removeActivity(const QString &id, const QJSValue &callback)
 {
-    m_service.removeActivity(id).then([=]() {
-        callback.call({});
-    });
+    continue_with(m_service.removeActivity(id), callback);
 }
 
 } // namespace Imports
