@@ -7,6 +7,7 @@
 #include "manager_p.h"
 
 #include <mutex>
+#include <optional>
 
 #include <QCoreApplication>
 #include <QDBusConnection>
@@ -17,6 +18,7 @@
 #include "mainthreadexecutor_p.h"
 
 #include "common/dbus/common.h"
+#include "utils/continue_with.h"
 #include "utils/dbusfuture_p.h"
 #include "version.h"
 
@@ -90,7 +92,6 @@ Manager::ServiceStatus Manager::serviceStatus()
 void Manager::serviceOwnerChanged(const QString &serviceName, const QString &oldOwner, const QString &newOwner)
 {
     Q_UNUSED(oldOwner);
-    Q_UNUSED(newOwner);
 
     if (serviceName == KAMD_DBUS_SERVICE) {
         const bool isRunning = QDBusConnection::sessionBus().interface()->isServiceRegistered(KAMD_DBUS_SERVICE);
@@ -98,10 +99,19 @@ void Manager::serviceOwnerChanged(const QString &serviceName, const QString &old
         Q_EMIT serviceStatusChanged(m_serviceStatus);
 
         if (isRunning) {
-            DBusFuture::fromReply(m_service->serviceVersion()).then([](const QString &serviceVersion) {
+            using namespace kamd::utils;
+
+            continue_with(DBusFuture::fromReply(m_service->serviceVersion()), [this](const std::optional<QString> &serviceVersion) {
                 // Test whether the service is older than the library.
                 // If it is, we need to end this
-                auto split = serviceVersion.split(QLatin1Char('.'));
+
+                if (!serviceVersion.has_value()) {
+                    qWarning() << "KActivities: FATAL ERROR: Failed to contact the activity manager daemon";
+                    m_serviceStatus = NotRunning;
+                    return;
+                }
+
+                auto split = serviceVersion->split(QLatin1Char('.'));
                 QList<int> version;
 
                 // We require kactivitymanagerd version to be at least the
@@ -117,7 +127,7 @@ void Manager::serviceOwnerChanged(const QString &serviceName, const QString &old
                     QString libraryVersion = QString::number(requiredVersion[0]) + QLatin1Char('.') + QString::number(requiredVersion[1]) + QLatin1Char('.')
                         + QString::number(requiredVersion[2]);
 
-                    qDebug() << "KActivities service version: " << serviceVersion;
+                    qDebug() << "KActivities service version: " << serviceVersion.value();
                     qDebug() << "KActivities library version: " << libraryVersion;
                     qFatal("KActivities: FATAL ERROR: The service is older than the library");
                 }
