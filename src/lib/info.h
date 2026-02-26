@@ -115,30 +115,6 @@ public:
      */
     QString icon() const;
 
-    /**
-     * Links the specified resource to the activity
-     * @param resourceUri resource URI
-     * @note This method is <b>asynchronous</b>. It will return before the
-     * resource is actually linked to the activity.
-     */
-    // QFuture<void> linkResource(const QString &resourceUri);
-
-    /**
-     * Unlinks the specified resource from the activity
-     * @param resourceUri resource URI
-     * @note This method is <b>asynchronous</b>. It will return before the
-     * resource is actually unlinked from the activity.
-     */
-    // QFuture<void> unlinkResource(const QString &resourceUri);
-
-    /**
-     * @returns whether a resource is linked to this activity
-     * @note This QFuture is not thread-based, you can not call synchronous
-     * methods like waitForFinished, cancel, pause on it.
-     * @since 5.0
-     */
-    // QFuture<bool> isResourceLinked(const QString &resourceUri);
-
 Q_SIGNALS:
     /**
      * Emitted when the activity's name, icon or some custom property is changed
