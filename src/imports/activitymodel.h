@@ -30,10 +30,24 @@ namespace KActivities
 {
 namespace Imports
 {
-/**
- * ActivityModel
- */
 
+/*!
+ * \qmltype ActivityModel
+ * \inqmlmodule org.kde.activities
+ *
+ * \brief Activities model.
+ *
+ * This model provides the following roles:
+ * \list
+ * \li name (string)
+ * \li icon (QIcon)
+ * \li id (string)
+ * \li iconSource (string)
+ * \li description (string)
+ * \li background (string)
+ * \li current (bool)
+ * \endlist
+ */
 class ActivityModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -61,16 +75,41 @@ public:
 
 public Q_SLOTS:
     // Activity control methods
+
+    /*!
+     * \qmlmethod void ActivityModel::setActivityName(string id, string name, var callback)
+     */
     void setActivityName(const QString &id, const QString &name, const QJSValue &callback);
+
+    /*!
+     * \qmlmethod void ActivityModel::setActivityDescription(string id, string description, var callback)
+     */
     void setActivityDescription(const QString &id, const QString &description, const QJSValue &callback);
+
+    /*!
+     * \qmlmethod void ActivityModel::setActivityIcon(string id, string icon, var callback)
+     */
     void setActivityIcon(const QString &id, const QString &icon, const QJSValue &callback);
 
+    /*!
+     * \qmlmethod void ActivityModel::setCurrentActivity(string id, var callback)
+     */
     void setCurrentActivity(const QString &id, const QJSValue &callback);
 
+    /*!
+     * \qmlmethod void ActivityModel::addActivity(string name, var callback)
+     */
     void addActivity(const QString &name, const QJSValue &callback);
+
+    /*!
+     * \qmlmethod void ActivityModel::removeActivity(string id,  var callback)
+     */
     void removeActivity(const QString &id, const QJSValue &callback);
 
 Q_SIGNALS:
+    /*!
+     * \qmlsignal ActivityModel::shownStatesChanged(string state)
+     */
     void shownStatesChanged(const QString &state);
 
 private Q_SLOTS:

@@ -1,0 +1,6 @@
+/*!
+    \qmlmodule org.kde.activities
+    \title Plasma Activities QML Types
+    \ingroup qmlmodules
+    \brief QML API for Plasma Activities
+*/

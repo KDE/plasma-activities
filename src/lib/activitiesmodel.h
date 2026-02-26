@@ -24,14 +24,21 @@ namespace KActivities
 {
 class ActivitiesModelPrivate;
 
-/**
- * Data model that shows existing activities
+/*!
+ * \class KActivities::ActivitiesModel
+ * \inmodule PlasmaActivities
+ * \inheaderfile PlasmaActivities/ActivitiesModel
+ *
+ * \brief Data model that shows existing activities.
  */
 class PLASMA_ACTIVITIES_EXPORT ActivitiesModel : public QAbstractListModel
 {
     Q_OBJECT
 
 public:
+    /*!
+     *
+     */
     explicit ActivitiesModel(QObject *parent = nullptr);
 
     ~ActivitiesModel() override;
@@ -44,15 +51,24 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
+    /*!
+     * \value ActivityId UUID of the activity
+     * \value ActivityName Activity name
+     * \value ActivityDescription Activity description
+     * \value ActivityIconSource Activity icon source name
+     * \value ActivityBackground Activity wallpaper (currently unsupported)
+     * \value ActivityIsCurrent Is this activity the current one current
+     * \value UserRole To be used by models that inherit this one
+     */
     enum Roles {
-        ActivityId = Qt::UserRole, ///< UUID of the activity
-        ActivityName = Qt::UserRole + 1, ///< Activity name
-        ActivityDescription = Qt::UserRole + 2, ///< Activity description
-        ActivityIconSource = Qt::UserRole + 3, ///< Activity icon source name
-        ActivityBackground = Qt::UserRole + 5, ///< Activity wallpaper (currently unsupported)
-        ActivityIsCurrent = Qt::UserRole + 6, ///< Is this activity the current one current
+        ActivityId = Qt::UserRole,
+        ActivityName = Qt::UserRole + 1,
+        ActivityDescription = Qt::UserRole + 2,
+        ActivityIconSource = Qt::UserRole + 3,
+        ActivityBackground = Qt::UserRole + 5,
+        ActivityIsCurrent = Qt::UserRole + 6,
 
-        UserRole = Qt::UserRole + 32, ///< To be used by models that inherit this one
+        UserRole = Qt::UserRole + 32,
     };
 
 private:

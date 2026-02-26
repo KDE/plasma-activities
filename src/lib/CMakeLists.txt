@@ -106,6 +106,8 @@ ecm_generate_export_header (PlasmaActivities
    DEPRECATED_BASE_VERSION 0
 )
 
+ecm_generate_qdoc(PlasmaActivities plasmaactivities.qdocconf)
+
 ecm_generate_headers (
    PlasmaActivities_CamelCase_HEADERS
    HEADER_NAMES
@@ -135,31 +137,6 @@ install (
    EXPORT PlasmaActivitiesLibraryTargets
    ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
    )
-
-if(BUILD_QCH)
-    ecm_add_qch(
-        PlasmaActivities_QCH
-        NAME PlasmaActivities
-        BASE_NAME PlasmaActivities
-        VERSION ${PROJECT_VERSION}
-        ORG_DOMAIN org.kde
-        SOURCES # using only public headers, to cover only public API
-            ${PlasmaActivities_HEADERS}
-        MD_MAINPAGE "${CMAKE_SOURCE_DIR}/README.md"
-        LINK_QCHS
-            Qt6Core_QCH
-        INCLUDE_DIRS
-            ${PLASMA_ACTIVITIES_BUILD_INCLUDE_DIRS}
-        BLANK_MACROS
-            PLASMA_ACTIVITIES_EXPORT
-            PLASMA_ACTIVITIES_DEPRECATED
-            PLASMA_ACTIVITIES_DEPRECATED_EXPORT
-        TAGFILE_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
-        QCH_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
-        COMPONENT Devel
-    )
-endif()
-
 
 if (NOT WIN32)
     ecm_generate_pkgconfig_file(BASE_NAME PlasmaActivities

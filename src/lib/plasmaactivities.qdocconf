@@ -1,0 +1,35 @@
+include($KDE_DOCS/global/qt-module-defaults.qdocconf)
+
+project = PlasmaActivities
+description = Library for interacting with Plasma Activities
+
+documentationinheaders = true
+
+headerdirs += .
+sourcedirs += .
+
+outputformats = HTML
+
+depends += \
+    kde \
+    qtcore \
+    qtgui \
+    plasmaactivitiesqml
+
+navigation.landingpage = "PlasmaActivities"
+
+qhp.projects            = PlasmaActivities
+
+qhp.PlasmaActivities.file                = plasmaactivities.qhp
+qhp.PlasmaActivities.namespace           = org.kde.plasmaactivities.$QT_VERSION_TAG
+qhp.PlasmaActivities.virtualFolder       = plasmaactivities
+qhp.PlasmaActivities.indexTitle          = Plasma Activities
+qhp.PlasmaActivities.indexRoot           =
+
+qhp.PlasmaActivities.subprojects         = classes
+qhp.PlasmaActivities.subprojects.classes.title = C++ Classes
+qhp.PlasmaActivities.subprojects.classes.indexTitle = Plasma Activities C++ Classes
+qhp.PlasmaActivities.subprojects.classes.selectors = class fake:headerfile
+qhp.PlasmaActivities.subprojects.classes.sortPages = true
+
+tagfile = plasmaactivities.tags

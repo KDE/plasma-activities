@@ -12,14 +12,20 @@
 
 #include "plasma_activities_export.h"
 
+/*!
+ * \namespace KActivities::ResourceInstance
+ * \inmodule PlasmaActivities
+ * \inheaderfile KActivities/ResourceInstance
+ */
 namespace KActivities::ResourceInstance
 {
-/**
+/*!
  * This function is used to notify the system that a file, web page
  * or some other resource has been accessed.
  *
- * @param uri URI of the resource
- * @param application application's name (the name used for the .desktop file).
+ * \a uri URI of the resource
+ *
+ * \a application application's name (the name used for the .desktop file).
  *        If not specified, QCoreApplication::applicationName is used
  */
 PLASMA_ACTIVITIES_EXPORT void notifyAccessed(const QUrl &uri, const QString &application = QString());

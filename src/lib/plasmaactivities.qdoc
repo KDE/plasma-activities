@@ -1,0 +1,9 @@
+/*!
+    \module PlasmaActivities
+    \title Plasma Activities C++ Classes
+    \ingroup modules
+    \cmakepackage Plasma
+    \cmakecomponent Activities
+
+    \brief Library for interacting with Plasma Activities.
+*/

@@ -1,0 +1,35 @@
+include($KDE_DOCS/global/qt-module-defaults.qdocconf)
+
+project = PlasmaActivitiesQml
+description = QML API for Plasma Activities
+
+documentationinheaders = true
+
+headerdirs += .
+sourcedirs += .
+
+outputformats = HTML
+
+depends += \
+    kde \
+    qtcore \
+    qtqml \
+    plasmaactivities
+
+navigation.landingpage  = "PlasmaActivities"
+
+qhp.projects            = PlasmaActivitiesQml
+
+qhp.PlasmaActivitiesQml.file                = plasmaactivitiesqml.qhp
+qhp.PlasmaActivitiesQml.namespace           = org.kde.plasmaactivitiesqml.$QT_VERSION_TAG
+qhp.PlasmaActivitiesQml.virtualFolder       = plasmaactivitiesqml
+qhp.PlasmaActivitiesQml.indexTitle          = Plasma Activities QML
+qhp.PlasmaActivitiesQml.indexRoot           =
+
+qhp.PlasmaActivitiesQml.subprojects         = qmltypes
+qhp.PlasmaActivitiesQml.subprojects.qmltypes.title = QML Types
+qhp.PlasmaActivitiesQml.subprojects.qmltypes.indexTitle = Plasma Activities QML Types
+qhp.PlasmaActivitiesQml.subprojects.qmltypes.selectors = qmlmodule:org.kde.coreaddons
+qhp.PlasmaActivitiesQml.subprojects.qmltypes.sortPages = true
+
+tagfile = plasmaactivitiesqml.tags

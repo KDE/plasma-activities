@@ -22,36 +22,51 @@ namespace KActivities
 {
 namespace Imports
 {
-/**
- * ActivityInfo
- */
 
+/*!
+ * \qmltype ActivityInfo
+ * \inqmlmodule org.kde.activities
+ *
+ * \brief Activity info.
+ */
 class ActivityInfo : public QObject
 {
     Q_OBJECT
     QML_ELEMENT
 
-    /**
+    /*!
+     * \qmlproperty string ActivityInfo::activityId
+     *
      * Unique identifier of the activity
      */
     Q_PROPERTY(QString activityId READ activityId WRITE setActivityId NOTIFY activityIdChanged)
 
-    /**
+    /*!
+     * \qmlproperty string ActivityInfo::name
+     *
      * Name of the activity
      */
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
 
-    /**
+    /*!
+     * \qmlproperty string ActivityInfo::description
+     *
      * Name of the activity
      */
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
 
-    /**
+    /*!
+     * \qmlproperty string ActivityInfo::icon
+     *
      * Activity icon
      */
     Q_PROPERTY(QString icon READ icon WRITE setIcon NOTIFY iconChanged)
 
-    /**
+    /*!
+     * \qmlproperty bool ActivityInfo::valid
+     *
+     * \readonly
+     *
      * Is the activity a valid one - does it exist?
      */
     Q_PROPERTY(bool valid READ valid NOTIFY validChanged)

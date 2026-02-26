@@ -31,3 +31,5 @@ target_link_libraries(
 )
 
 ecm_finalize_qml_module(plasmaactivitiesextensionplugin DESTINATION ${KDE_INSTALL_QMLDIR})
+
+ecm_generate_qdoc(plasmaactivitiesextensionplugin plasmaactivitiesqml.qdocconf)
