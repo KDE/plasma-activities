@@ -19,13 +19,17 @@ namespace KActivities
 {
 class InfoPrivate;
 
-/**
- * This class provides info about an activity. Most methods in it require a
+/*!
+ * \class KActivities::Info
+ * \inmodule PlasmaActivities
+ * \inheaderfile PlasmaActivities/Info
+ *
+ * \brief Info about an activity.
+ *
+ * Most methods in it require a
  * semantic backend running to function properly.
  *
  * This class is not thread-safe.
- *
- * @see Consumer for info about activities
  *
  * The API of the class is synchronous, but the most used properties
  * are pre-fetched and cached. This means that, in order to get the least
@@ -41,113 +45,139 @@ class InfoPrivate;
  * name method will return an empty string.
  *
  * For example, this is wrong (works, but blocks):
- * @code
+ * \code
  * void someMethod(const QString & activity) {
  *     // Do not copy. This approach is not a good one!
  *     Info info(activity);
  *     doSomethingWith(info.name());
  * }
- * @endcode
+ * \endcode
  *
  * Instances of the Info class should be long-lived. For example, members
  * of the classes that use them, and you should listen for the changes in the
  * provided properties.
  *
- * @since 4.5
+ * \since 4.5
  */
 class PLASMA_ACTIVITIES_EXPORT Info : public QObject
 {
     Q_OBJECT
 
+    /*!
+     * \property KActivities::Info::id
+     */
     Q_PROPERTY(QString id READ id)
+
+    /*!
+     * \property KActivities::Info::name
+     */
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
+
+    /*!
+     * \property KActivities::Info::description
+     */
     Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
+
+    /*!
+     * \property KActivities::Info::icon
+     */
     Q_PROPERTY(QString icon READ icon NOTIFY iconChanged)
+
+    /*!
+     * \property KActivities::Info::isCurrent
+     */
     Q_PROPERTY(bool isCurrent READ isCurrent NOTIFY isCurrentChanged)
 
 public:
+    /*!
+     *
+     */
     explicit Info(const QString &activity, QObject *parent = nullptr);
     ~Info() override;
 
-    /**
+    /*!
      * Specifies which parts of this class are functional
+     *
+     * \value Nothing No activity info provided (isValid is false)
+     * \value BasicInfo Basic info is provided
+     * \value Everything Everything is available
      */
     enum Availability {
-        Nothing = 0, ///< No activity info provided (isValid is false)
-        BasicInfo = 1, ///< Basic info is provided
-        Everything = 2, ///< Everything is available
+        Nothing = 0,
+        BasicInfo = 1,
+        Everything = 2,
     };
 
-    /**
-     * @returns what info is provided by this instance of Info
+    /*!
+     * Returns what info is provided by this instance of Info
      */
     Availability availability() const;
 
-    /**
-     * @returns the URI of this activity. The same URI is used by activities
+    /*!
+     * Returns the URI of this activity. The same URI is used by activities
      * KIO worker.
      */
     QString uri() const;
 
-    /**
-     * @returns the id of the activity
+    /*!
+     * Returns the id of the activity
      */
     QString id() const;
 
-    /**
-     * @returns whether this activity is the current one
+    /*!
+     * Returns whether this activity is the current one
      */
     bool isCurrent() const;
 
-    /**
-     * @returns the name of the activity
+    /*!
+     * Returns the name of the activity
      */
     QString name() const;
 
-    /**
-     * @returns the description of the activity
+    /*!
+     * Returns the description of the activity
      */
     QString description() const;
 
-    /**
-     * @returns the icon of the activity. Icon can be a freedesktop.org name or
+    /*!
+     * Returns the icon of the activity. Icon can be a freedesktop.org name or
      * a file path. Or empty if no icon is set.
      */
     QString icon() const;
 
 Q_SIGNALS:
-    /**
+    /*!
      * Emitted when the activity's name, icon or some custom property is changed
      */
     void infoChanged();
 
-    /**
+    /*!
      * Emitted when the name is changed
      */
     void nameChanged(const QString &name);
 
-    /**
+    /*!
      * Emitted when the activity becomes the current one, or when it stops
      * being the current one
      */
     void isCurrentChanged(bool current);
 
-    /**
+    /*!
      * Emitted when the description is changed
      */
     void descriptionChanged(const QString &description);
 
-    /**
+    /*!
      * Emitted when the icon was changed
      */
     void iconChanged(const QString &icon);
 
-    /**
+    /*!
      * Emitted when the activity is added
      */
     void added();
 
-    /**
+    /*!
      * Emitted when the activity is removed
      */
     void removed();

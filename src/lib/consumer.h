@@ -21,7 +21,13 @@ namespace KActivities
 {
 class ConsumerPrivate;
 
-/**
+/*!
+ * \class KActivities::Consumer
+ * \inmodule PlasmaActivities
+ * \inheaderfile PlasmaActivities/Consumer
+ *
+ * \brief Read-only information about activities.
+ *
  * Contextual information can be, from the user's point of view, divided
  * into three aspects - "who am I?", "where am I?" (what are my surroundings?)
  * and "what am I doing?".
@@ -46,91 +52,116 @@ class ConsumerPrivate;
  * For example, if this is the only existing instance of the Consumer class,
  * the listActivities method will return an empty list.
  *
- * @code
+ * \code
  * void someMethod() {
  *     // Do not copy. This approach is not a good one!
  *     Consumer c;
  *     doSomethingWith(c.listActivities());
  * }
- * @endcode
+ * \endcode
  *
  * Instances of the Consumer class should be long-lived. For example, members
  * of the classes that use them, and you should listen for the changes in the
  * provided properties.
  *
- * @since 4.5
+ * \since 4.5
  */
 class PLASMA_ACTIVITIES_EXPORT Consumer : public QObject
 {
     Q_OBJECT
 
+    /*!
+     * \property KActivities::Consumer::currentActivity
+     */
     Q_PROPERTY(QString currentActivity READ currentActivity NOTIFY currentActivityChanged)
+
+    /*!
+     * \property KActivities::Consumer::activities
+     */
     Q_PROPERTY(QStringList activities READ activities NOTIFY activitiesChanged)
+
+    /*!
+     * \property KActivities::Consumer::serviceStatus
+     */
     Q_PROPERTY(ServiceStatus serviceStatus READ serviceStatus NOTIFY serviceStatusChanged)
 
 public:
-    /**
+    /*!
      * Different states of the activities service
+     *
+     * \value NotRunning Service is not running
+     * \value Unknown Unable to determine the status of the service
+     * \value Running Service is running properly
      */
     enum ServiceStatus {
-        NotRunning, ///< Service is not running
-        Unknown, ///< Unable to determine the status of the service
-        Running, ///< Service is running properly
+        NotRunning,
+        Unknown,
+        Running,
     };
 
+    /*!
+     *
+     */
     explicit Consumer(QObject *parent = nullptr);
 
     ~Consumer() override;
 
-    /**
-     * @returns the id of the current activity
-     * @note Activity ID is a UUID-formatted string. If the serviceStatus
+    /*!
+     * Returns the id of the current activity
+     *
+     * \note Activity ID is a UUID-formatted string. If the serviceStatus
      *       is not Running, a null UUID is returned. The ID can also be an empty
      *       string in the case there is no current activity.
      */
     QString currentActivity() const;
 
-    /**
-     * @returns the list of all existing activities
-     * @note If the serviceStatus is not Running, only a null activity will be
+    /*!
+     * Returns the list of all existing activities
+     *
+     * \note If the serviceStatus is not Running, only a null activity will be
      *       returned.
      */
     QStringList activities() const;
 
-    /**
-     * @returns status of the activities service
+    /*!
+     * Returns status of the activities service
      */
     ServiceStatus serviceStatus();
 
 Q_SIGNALS:
-    /**
+    /*!
      * This signal is emitted when the current activity is changed
-     * @param id id of the new current activity
+     *
+     * \a id id of the new current activity
      */
     void currentActivityChanged(const QString &id);
 
-    /**
+    /*!
      * This signal is emitted when the activity service goes online or offline,
      * or when the class manages to synchronize the data with the service.
-     * @param status new status of the service
+     *
+     * \a status new status of the service
      */
     void serviceStatusChanged(Consumer::ServiceStatus status);
 
-    /**
+    /*!
      * This signal is emitted when a new activity is added
-     * @param id id of the new activity
+     *
+     * \a id id of the new activity
      */
     void activityAdded(const QString &id);
 
-    /**
+    /*!
      * This signal is emitted when an activity has been removed
-     * @param id id of the removed activity
+     *
+     * \a id id of the removed activity
      */
     void activityRemoved(const QString &id);
 
-    /**
+    /*!
      * This signal is emitted when the activity list changes
-     * @param activities list of activities
+     *
+     * \a activities list of activities
      */
     void activitiesChanged(const QStringList &activities);
 

@@ -27,14 +27,11 @@ include(ECMGenerateExportHeader)
 include(ECMGenerateHeaders)
 include(ECMGeneratePkgConfigFile)
 include(ECMQtDeclareLoggingCategory)
-include(ECMAddQch)
 include(ECMMarkNonGuiExecutable)
 include(ECMDeprecationSettings)
 include(ECMQmlModule)
+include(ECMGenerateQDoc)
 include(KDEClangFormat)
-
-option(BUILD_QCH "Build API documentation in QCH format (for e.g. Qt Assistant, Qt Creator & KDevelop)" OFF)
-add_feature_info(QCH ${BUILD_QCH} "API documentation in QCH format (for e.g. Qt Assistant, Qt Creator & KDevelop)")
 
 find_package (Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS Core DBus)
 
@@ -62,16 +59,6 @@ if (BUILD_TESTING)
 endif()
 
 set (CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/PlasmaActivities")
-
-if (BUILD_QCH)
-    ecm_install_qch_export(
-        TARGETS PlasmaActivities_QCH
-        FILE PlasmaActivitiesLibraryQchTargets.cmake
-        DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
-        COMPONENT Devel
-    )
-    set(PACKAGE_INCLUDE_QCHTARGETS "include(\"\${CMAKE_CURRENT_LIST_DIR}/PlasmaActivitiesLibraryQchTargets.cmake\")")
-endif()
 
 install (
    EXPORT PlasmaActivitiesLibraryTargets
