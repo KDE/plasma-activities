@@ -76,7 +76,6 @@ ecm_qt_declare_logging_category(PlasmaActivities
     IDENTIFIER KAMD_CORELIB
     CATEGORY_NAME kde.plasma.activities
     OLD_CATEGORY_NAMES org.kde.kactivities.lib.core
-    DEFAULT_SEVERITY Warning
     DESCRIPTION "Plasma Activities core lib"
     EXPORT PLASMA_ACTIVITIES
 )
