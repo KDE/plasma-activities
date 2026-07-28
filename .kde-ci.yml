@@ -1,10 +1,10 @@
 Dependencies:
  - 'on': ['Linux', 'FreeBSD', 'Windows', 'macOS']
    'require':
-    'frameworks/extra-cmake-modules': '@latest-kf6'
-    'frameworks/kconfig': '@latest-kf6'
-    'frameworks/kwindowsystem': '@latest-kf6'
-    'frameworks/kcoreaddons': '@latest-kf6'
+    'frameworks/extra-cmake-modules': 'Frameworks/6.24'
+    'frameworks/kconfig': 'Frameworks/6.24'
+    'frameworks/kwindowsystem': 'Frameworks/6.24'
+    'frameworks/kcoreaddons': 'Frameworks/6.24'
 
 Options:
  test-before-installing: True
